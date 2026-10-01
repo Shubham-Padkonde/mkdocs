@@ -117,7 +117,8 @@ def copy_file(source_path: str, output_path: str) -> None:
     The output_path may be a directory.
     """
     output_dir = os.path.dirname(output_path)
-    os.makedirs(output_dir, exist_ok=True)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
     if os.path.isdir(output_path):
         output_path = os.path.join(output_path, os.path.basename(source_path))
     shutil.copyfile(source_path, output_path)
@@ -126,7 +127,8 @@ def copy_file(source_path: str, output_path: str) -> None:
 def write_file(content: bytes, output_path: str) -> None:
     """Write content to output_path, making sure any parent directories exist."""
     output_dir = os.path.dirname(output_path)
-    os.makedirs(output_dir, exist_ok=True)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
     with open(output_path, 'wb') as f:
         f.write(content)
 

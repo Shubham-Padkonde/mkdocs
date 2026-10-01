@@ -10,7 +10,7 @@ import unittest
 from unittest import mock
 
 from mkdocs import exceptions, utils
-from mkdocs.tests.base import dedent, tempdir
+from mkdocs.tests.base import change_dir, dedent, tempdir
 from mkdocs.utils import meta
 
 BASEYML = """
@@ -328,6 +328,20 @@ class UtilsTests(unittest.TestCase):
                 dst = os.path.join(dst_dir, dst)
                 utils.copy_file(src, dst)
                 self.assertTrue(os.path.isfile(os.path.join(dst_dir, expected)))
+
+    @tempdir(files={'source.txt': 'content'})
+    def test_copy_file_to_current_directory(self, directory):
+        with change_dir(directory):
+            utils.copy_file('source.txt', 'destination.txt')
+            with open('destination.txt') as file:
+                self.assertEqual(file.read(), 'content')
+
+    @tempdir()
+    def test_write_file_to_current_directory(self, directory):
+        with change_dir(directory):
+            utils.write_file(b'content', 'destination.txt')
+            with open('destination.txt', 'rb') as file:
+                self.assertEqual(file.read(), b'content')
 
     @tempdir()
     @tempdir()
